@@ -1,0 +1,9 @@
+.page-wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+}
+
+.page-title {
+  margin-bottom: 1.25rem;
+}

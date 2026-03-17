@@ -1,0 +1,35 @@
+.detail-exercise {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-ex-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.sets-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.sets-table th,
+.sets-table td {
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sets-table th {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sets-table tr:last-child td {
+  border-bottom: none;
+}

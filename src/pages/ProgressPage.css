@@ -1,0 +1,8 @@
+.progress-controls {
+  margin-bottom: 1.25rem;
+}
+
+.metric-toggle {
+  display: flex;
+  gap: 0.5rem;
+}

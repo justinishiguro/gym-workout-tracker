@@ -1,0 +1,44 @@
+.exercise-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.exercise-header {
+  align-items: flex-start;
+}
+
+.exercise-name-wrap {
+  flex: 1;
+  min-width: 0;
+  padding-right: 0.5rem;
+}
+
+.exercise-remove {
+  margin-top: 1.4rem;
+  flex-shrink: 0;
+}
+
+.sets-header {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr 1fr auto;
+  gap: 0.5rem;
+  padding-right: 2rem;
+}
+
+.set-col-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.sets-list {
+  gap: 0.4rem;
+}
+
+.add-set-btn {
+  align-self: flex-start;
+}

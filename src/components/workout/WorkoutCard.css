@@ -1,0 +1,35 @@
+.workout-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition), background var(--transition);
+  cursor: pointer;
+}
+
+.workout-card:hover {
+  border-color: var(--color-accent);
+  background: var(--color-surface-2);
+}
+
+.wc-header {
+  margin-bottom: 0.4rem;
+}
+
+.wc-name {
+  margin-top: 0.1rem;
+}
+
+.wc-arrow {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.wc-meta {
+  margin-bottom: 0.25rem;
+}
+
+.wc-exercises {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
