@@ -4,7 +4,7 @@ import PageWrapper from '../components/layout/PageWrapper';
 import { useUnit, fromKg } from '../context/UnitContext';
 import './WorkoutDetailPage.css';
 
-export default function WorkoutDetailPage({ getWorkoutById, deleteWorkout }) {
+export default function WorkoutDetailPage({ getWorkoutById, deleteWorkout, loading }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const workout = getWorkoutById(id);
@@ -15,6 +15,10 @@ export default function WorkoutDetailPage({ getWorkoutById, deleteWorkout }) {
       ? `${workout.name || 'Workout'} — Workout Tracker`
       : 'Not Found — Workout Tracker';
   }, [workout]);
+
+  if (loading) {
+    return <PageWrapper title="Loading…" />;
+  }
 
   if (!workout) {
     return (
@@ -27,9 +31,9 @@ export default function WorkoutDetailPage({ getWorkoutById, deleteWorkout }) {
     );
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (window.confirm('Delete this workout?')) {
-      deleteWorkout(workout.id);
+      await deleteWorkout(workout.id);
       navigate('/');
     }
   }

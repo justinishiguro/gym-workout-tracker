@@ -1,31 +1,41 @@
-const WORKOUTS_KEY = 'workouts';
-const TEMPLATES_KEY = 'exerciseTemplates';
+import { supabase } from './supabase'
 
-export function getWorkouts() {
-  try {
-    return JSON.parse(localStorage.getItem(WORKOUTS_KEY)) || [];
-  } catch {
-    return [];
-  }
+export async function getWorkouts(userId) {
+  const { data, error } = await supabase
+    .from('workouts')
+    .select('*')
+    .eq('user_id', userId)
+  if (error) throw error
+  return data || []
 }
 
-export function setWorkouts(workouts) {
-  localStorage.setItem(WORKOUTS_KEY, JSON.stringify(workouts));
+export async function setWorkout(workout) {
+  const { error } = await supabase
+    .from('workouts')
+    .upsert(workout)
+  if (error) throw error
 }
 
-export function getTemplates() {
-  try {
-    return JSON.parse(localStorage.getItem(TEMPLATES_KEY)) || [];
-  } catch {
-    return [];
-  }
+export async function deleteWorkout(id) {
+  const { error } = await supabase
+    .from('workouts')
+    .delete()
+    .eq('id', id)
+  if (error) throw error
 }
 
-export function setTemplates(templates) {
-  localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+export async function getTemplates(userId) {
+  const { data, error } = await supabase
+    .from('exercise_templates')
+    .select('*')
+    .eq('user_id', userId)
+  if (error) throw error
+  return data || []
 }
 
-export function initStorage() {
-  if (!localStorage.getItem(WORKOUTS_KEY)) setWorkouts([]);
-  if (!localStorage.getItem(TEMPLATES_KEY)) setTemplates([]);
+export async function setTemplate(template) {
+  const { error } = await supabase
+    .from('exercise_templates')
+    .upsert(template)
+  if (error) throw error
 }

@@ -1,23 +1,30 @@
-import { useState } from 'react';
-import { getWorkouts, setWorkouts } from '../utils/storage';
+import { useState, useEffect } from 'react';
+import { getWorkouts, setWorkout, deleteWorkout as dbDeleteWorkout } from '../utils/storage';
 import { generateId } from '../utils/idGenerator';
 
-export function useWorkouts() {
-  const [workouts, setWorkoutsState] = useState(() => getWorkouts());
+export function useWorkouts(userId) {
+  const [workouts, setWorkoutsState] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  function persist(next) {
-    setWorkoutsState(next);
-    setWorkouts(next);
-  }
+  useEffect(() => {
+    if (!userId) return;
+    setLoading(true);
+    getWorkouts(userId).then((data) => {
+      setWorkoutsState(data);
+      setLoading(false);
+    });
+  }, [userId]);
 
-  function saveWorkout(data) {
-    const workout = { ...data, id: generateId() };
-    persist([...workouts, workout]);
+  async function saveWorkout(data) {
+    const workout = { ...data, id: generateId(), user_id: userId };
+    await setWorkout(workout);
+    setWorkoutsState((prev) => [...prev, workout]);
     return workout.id;
   }
 
-  function deleteWorkout(id) {
-    persist(workouts.filter((w) => w.id !== id));
+  async function deleteWorkout(id) {
+    await dbDeleteWorkout(id);
+    setWorkoutsState((prev) => prev.filter((w) => w.id !== id));
   }
 
   function getWorkoutById(id) {
@@ -28,5 +35,5 @@ export function useWorkouts() {
     a.date < b.date ? -1 : a.date > b.date ? 1 : 0
   );
 
-  return { workouts: sorted, saveWorkout, deleteWorkout, getWorkoutById };
+  return { workouts: sorted, saveWorkout, deleteWorkout, getWorkoutById, loading };
 }

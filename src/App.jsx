@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { SignIn, SignUp, useUser } from '@clerk/react';
 import { useWorkouts } from './hooks/useWorkouts';
 import { useExerciseTemplates } from './hooks/useExerciseTemplates';
 import { UnitProvider } from './context/UnitContext';
@@ -8,13 +9,12 @@ import NewWorkoutPage from './pages/NewWorkoutPage';
 import WorkoutDetailPage from './pages/WorkoutDetailPage';
 import ProgressPage from './pages/ProgressPage';
 
-export default function App() {
-  const { workouts, saveWorkout, deleteWorkout, getWorkoutById } = useWorkouts();
-  const { templates, addTemplate } = useExerciseTemplates();
+function AuthenticatedApp({ userId }) {
+  const { workouts, saveWorkout, deleteWorkout, getWorkoutById, loading } = useWorkouts(userId);
+  const { templates, addTemplate } = useExerciseTemplates(userId);
 
   return (
     <UnitProvider>
-    <BrowserRouter>
       <NavBar />
       <Routes>
         <Route path="/" element={<WorkoutListPage workouts={workouts} />} />
@@ -34,6 +34,7 @@ export default function App() {
             <WorkoutDetailPage
               getWorkoutById={getWorkoutById}
               deleteWorkout={deleteWorkout}
+              loading={loading}
             />
           }
         />
@@ -41,8 +42,36 @@ export default function App() {
           path="/progress"
           element={<ProgressPage workouts={workouts} templates={templates} />}
         />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
     </UnitProvider>
+  );
+}
+
+function AppRoutes() {
+  const { isSignedIn, isLoaded, user } = useUser();
+
+  if (!isLoaded) return null;
+
+  if (isSignedIn) {
+    return <AuthenticatedApp userId={user.id} />;
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Routes>
+        <Route path="/sign-in/*" element={<SignIn routing="path" path="/sign-in" />} />
+        <Route path="/sign-up/*" element={<SignUp routing="path" path="/sign-up" />} />
+        <Route path="*" element={<Navigate to="/sign-in" replace />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }

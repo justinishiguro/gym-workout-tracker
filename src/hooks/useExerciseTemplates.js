@@ -1,23 +1,25 @@
-import { useState } from 'react';
-import { getTemplates, setTemplates } from '../utils/storage';
+import { useState, useEffect } from 'react';
+import { getTemplates, setTemplate } from '../utils/storage';
 import { generateId } from '../utils/idGenerator';
 
-export function useExerciseTemplates() {
-  const [templates, setTemplatesState] = useState(() => getTemplates());
+export function useExerciseTemplates(userId) {
+  const [templates, setTemplatesState] = useState([]);
 
-  function persist(next) {
-    setTemplatesState(next);
-    setTemplates(next);
-  }
+  useEffect(() => {
+    if (!userId) return;
+    getTemplates(userId).then((data) => setTemplatesState(data));
+  }, [userId]);
 
-  function addTemplate(name) {
+  async function addTemplate(name) {
     if (!name || !name.trim()) return;
     const trimmed = name.trim();
     const exists = templates.some(
       (t) => t.name.toLowerCase() === trimmed.toLowerCase()
     );
     if (exists) return;
-    persist([...templates, { id: generateId(), name: trimmed }]);
+    const template = { id: generateId(), name: trimmed, user_id: userId };
+    await setTemplate(template);
+    setTemplatesState((prev) => [...prev, template]);
   }
 
   return { templates, addTemplate };

@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { UserButton } from '@clerk/react';
 import { useUnit } from '../../context/UnitContext';
 import './NavBar.css';
 
@@ -28,6 +29,7 @@ export default function NavBar() {
         <button className="unit-toggle" onClick={toggleUnit} title="Switch weight unit">
           {unit}
         </button>
+        <UserButton />
       </div>
     </nav>
   );
